@@ -10,6 +10,8 @@ public class PlayerMain : MonoBehaviour
     public LayerMask layerNotSelf;
     public bool controlling = true;
 
+    public float fallMultiplier = 2.5f, lowJumpMultiplier = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,12 @@ public class PlayerMain : MonoBehaviour
             xDirection = Input.GetAxis("Horizontal");
 
             //Jump Check
+            if (rigidBody.velocity.y < 0)
+                rigidBody.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            else if (rigidBody.velocity.y > 0 && !Input.GetKey(KeyCode.Space))
+                rigidBody.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+
+
             if (IsGrounded() && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
                 rigidBody.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
 
