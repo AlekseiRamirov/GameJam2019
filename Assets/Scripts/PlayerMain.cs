@@ -5,9 +5,10 @@ using UnityEngine ;
 public class PlayerMain : MonoBehaviour
 {
     public float walkSpeed = 0.125f, jumpSpeed = 8, xDirection = 0;
-    public CapsuleCollider playerCollider;
-    public Rigidbody rigidBody;
+    CapsuleCollider playerCollider;
+    Rigidbody rigidBody;
     public LayerMask layerNotSelf;
+    public bool controlling = true;
 
     // Start is called before the first frame update
     void Start()
@@ -20,15 +21,21 @@ public class PlayerMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //xDir
-        xDirection = Input.GetAxis("Horizontal");
+        if (controlling)
+        {
+            //xDir
+            xDirection = Input.GetAxis("Horizontal");
 
-        //Jump Check
-        if (IsGrounded() && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
-            rigidBody.AddForce(Vector3.up*jumpSpeed, ForceMode.Impulse);
+            //Jump Check
+            if (IsGrounded() && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
+                rigidBody.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
 
-        if(!IsWalled())
-            rigidBody.MovePosition(new Vector3(transform.position.x+xDirection*walkSpeed, transform.position.y, transform.position.z));
+            if (!IsWalled())
+                rigidBody.MovePosition(new Vector3(transform.position.x + xDirection * walkSpeed, transform.position.y, transform.position.z));
+         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+            controlling = !controlling;
     }
 
     public bool IsGrounded()
